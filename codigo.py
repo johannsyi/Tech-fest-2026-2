@@ -21,7 +21,9 @@ def connect_db():
     )
     """)
 
-cursor.execute("""
+ 
+
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS results (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER UNIQUE,
@@ -32,7 +34,9 @@ cursor.execute("""
     )
     """)
 
-conn.commit()
+ 
+
+    conn.commit()
     conn.close()
 
  
@@ -87,8 +91,9 @@ def main(page: ft.Page):
         page.controls.clear()
         page.add(leaderboard_view())
 
+ 
 
-# HOME
+    # HOME
     def home_view():
         return ft.Column([
             ft.Text("YOU Social Value Simulator", size=30, weight="bold"),
@@ -97,7 +102,9 @@ def main(page: ft.Page):
             ft.ElevatedButton("View Leaderboard", on_click=go_leaderboard)
         ], alignment="center")
 
- # QUESTIONS 
+ 
+
+    # QUESTIONS 
     def form_view():
         name = ft.TextField(label="Name")
         age = ft.Dropdown(
@@ -158,3 +165,68 @@ def main(page: ft.Page):
                 page.snack_bar.open = True
                 page.update()
                 return
+
+ 
+
+            try:
+                answers = [
+                    int(q1.value), int(q2.value),
+                    int(q3.value), int(q4.value),
+                    int(q5.value)
+                ]
+            except:
+                page.snack_bar = ft.SnackBar(ft.Text("Answer all questions"))
+                page.snack_bar.open = True
+                page.update()
+                return
+
+ 
+
+            score, category = calculate_score(answers)
+
+ 
+
+            conn = sqlite3.connect("you.db")
+            cursor = conn.cursor()
+
+ 
+
+            try:
+                cursor.execute("INSERT INTO users (display_name, age_range) VALUES (?, ?)",
+                               (name.value, age.value))
+                user_id = cursor.lastrowid
+
+ 
+
+                cursor.execute(
+                    "INSERT INTO results (user_id, total_score, category, created_at) VALUES (?, ?, ?, ?)",
+                    (user_id, score, category, datetime.now())
+                )
+
+ 
+
+                conn.commit()
+            except:
+                page.snack_bar = ft.SnackBar(ft.Text("Name already exists"))
+                page.snack_bar.open = True
+                page.update()
+                return
+
+ 
+
+            conn.close()
+
+ 
+
+            show_result(name.value, score, category)
+
+ 
+
+        return ft.Column([
+            ft.Text("Create Profile", size=25),
+            name,
+            age,
+            q1, q2, q3, q4, q5,
+            ft.ElevatedButton("Submit", on_click=submit),
+            ft.ElevatedButton("Back", on_click=go_home)
+        ], scroll="auto")
