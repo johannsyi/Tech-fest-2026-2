@@ -32,3 +32,59 @@ cursor.execute("""
     )
     """)
 
+conn.commit()
+    conn.close()
+
+ 
+
+#Score
+def calculate_score(answers):
+    score = sum(answers)
+
+ 
+
+    if score <= 30:
+        category = "Standard"
+    elif score <= 60:
+        category = "Rising"
+    elif score <= 85:
+        category = "Trending"
+    else:
+        category = "Premium"
+
+ 
+
+    return score, category
+
+ 
+
+ 
+
+def main(page: ft.Page):
+    page.title = "YOU™ Simulator"
+    page.theme_mode = "light"
+
+ 
+
+    connect_db()
+
+ 
+
+    
+    def go_home(e=None):
+        page.controls.clear()
+        page.add(home_view())
+
+ 
+
+    def go_form(e=None):
+        page.controls.clear()
+        page.add(form_view())
+
+ 
+
+    def go_leaderboard(e=None):
+        page.controls.clear()
+        page.add(leaderboard_view())
+
+
