@@ -307,3 +307,13 @@ def show_result(name, score, category):
                 ]) for i, r in enumerate(rows)
             ]
         )
+
+return ft.Column([
+            ft.Text("Leaderboard", size=25),
+            table,
+            ft.ElevatedButton("Back", on_click=go_home)
+        ], scroll="auto")
+
+ 
+
+    go_home()
