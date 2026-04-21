@@ -88,3 +88,11 @@ def main(page: ft.Page):
         page.add(leaderboard_view())
 
 
+# HOME
+    def home_view():
+        return ft.Column([
+            ft.Text("YOU Social Value Simulator", size=30, weight="bold"),
+            ft.Text("Discover your social value and ranking."),
+            ft.ElevatedButton("Start Profile", on_click=go_form),
+            ft.ElevatedButton("View Leaderboard", on_click=go_leaderboard)
+        ], alignment="center")
