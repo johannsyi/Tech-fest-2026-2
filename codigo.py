@@ -96,3 +96,65 @@ def main(page: ft.Page):
             ft.ElevatedButton("Start Profile", on_click=go_form),
             ft.ElevatedButton("View Leaderboard", on_click=go_leaderboard)
         ], alignment="center")
+
+ # QUESTIONS 
+    def form_view():
+        name = ft.TextField(label="Name")
+        age = ft.Dropdown(
+            label="Age Range",
+            options=[
+                ft.dropdown.Option("18-25"),
+                ft.dropdown.Option("26-35"),
+                ft.dropdown.Option("36+"),
+            ]
+        )
+
+ 
+
+        # Questions (5)
+        q1 = ft.RadioGroup(content=ft.Column([
+            ft.Text("Are you extroverted?"),
+            ft.Radio(value="10", label="Yes"),
+            ft.Radio(value="5", label="No")
+        ]))
+
+ 
+
+        q2 = ft.RadioGroup(content=ft.Column([
+            ft.Text("Do you take risks?"),
+            ft.Radio(value="10", label="Often"),
+            ft.Radio(value="5", label="Rarely")
+        ]))
+
+ 
+
+        q3 = ft.RadioGroup(content=ft.Column([
+            ft.Text("Social media activity?"),
+            ft.Radio(value="10", label="High"),
+            ft.Radio(value="5", label="Low")
+        ]))
+
+ 
+
+        q4 = ft.RadioGroup(content=ft.Column([
+            ft.Text("Leadership style?"),
+            ft.Radio(value="10", label="Leader"),
+            ft.Radio(value="5", label="Follower")
+        ]))
+
+ 
+
+        q5 = ft.RadioGroup(content=ft.Column([
+            ft.Text("Decision making?"),
+            ft.Radio(value="10", label="Fast"),
+            ft.Radio(value="5", label="Slow")
+        ]))
+
+ 
+
+        def submit(e):
+            if not name.value or not age.value:
+                page.snack_bar = ft.SnackBar(ft.Text("Fill all fields"))
+                page.snack_bar.open = True
+                page.update()
+                return
