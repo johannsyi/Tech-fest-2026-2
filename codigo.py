@@ -230,3 +230,80 @@ def main(page: ft.Page):
             ft.ElevatedButton("Submit", on_click=submit),
             ft.ElevatedButton("Back", on_click=go_home)
         ], scroll="auto")
+
+def show_result(name, score, category):
+        conn = sqlite3.connect("you.db")
+        cursor = conn.cursor()
+
+ 
+
+        cursor.execute("""
+        SELECT display_name, total_score FROM users
+        JOIN results ON users.id = results.user_id
+        ORDER BY total_score DESC
+        """)
+
+ 
+
+        all_users = cursor.fetchall()
+
+ 
+
+        rank = [u[0] for u in all_users].index(name) + 1
+        total = len(all_users)
+
+ 
+
+        conn.close()
+
+ 
+
+        page.controls.clear()
+        page.add(ft.Column([
+            ft.Text(f"{name}'s Result", size=25),
+            ft.Text(f"Score: {score}"),
+            ft.Text(f"Category: {category}"),
+            ft.Text(f"Rank: #{rank} out of {total}"),
+            ft.ElevatedButton("Leaderboard", on_click=go_leaderboard),
+            ft.ElevatedButton("Home", on_click=go_home)
+        ]))
+
+ 
+
+    
+    def leaderboard_view():
+        conn = sqlite3.connect("you.db")
+        cursor = conn.cursor()
+
+ 
+
+        cursor.execute("""
+        SELECT display_name, total_score, category
+        FROM users
+        JOIN results ON users.id = results.user_id
+        ORDER BY total_score DESC
+        """)
+
+ 
+
+        rows = cursor.fetchall()
+        conn.close()
+
+ 
+
+        table = ft.DataTable(
+            columns=[
+                ft.DataColumn(ft.Text("Rank")),
+                ft.DataColumn(ft.Text("Name")),
+                ft.DataColumn(ft.Text("Score")),
+                ft.DataColumn(ft.Text("Category")),
+            ],
+            rows=[
+                ft.DataRow(cells=[
+                    ft.DataCell(ft.Text(str(i+1))),
+                    ft.DataCell(ft.Text(r[0])),
+                    ft.DataCell(ft.Text(str(r[1]))),
+                    ft.DataCell(ft.Text(r[2]))
+                ]) for i, r in enumerate(rows)
+            ]
+        )
